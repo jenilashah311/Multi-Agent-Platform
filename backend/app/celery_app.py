@@ -2,6 +2,7 @@ import json
 import os
 
 from celery import Celery
+from celery.signals import worker_ready
 
 from app.config import settings
 
@@ -28,3 +29,16 @@ celery_app.conf.result_serializer = "json"
 celery_app.conf.accept_content = ["json"]
 # Load tasks after celery_app and publish_event exist (avoids circular import).
 celery_app.conf.imports = ("app.tasks",)
+
+
+@worker_ready.connect
+def _start_metrics_http(**_kwargs):
+    """Expose Prometheus metrics from the worker process (where job counters are updated)."""
+    import app.tasks  # noqa: F401 — ensure metrics registry is populated
+
+    try:
+        from prometheus_client import start_http_server
+
+        start_http_server(9100)
+    except OSError:
+        pass

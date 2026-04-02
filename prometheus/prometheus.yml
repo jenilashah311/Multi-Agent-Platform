@@ -2,7 +2,13 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+  # API process (mostly health); job counters are updated in the Celery worker.
   - job_name: multi-agent-api
     static_configs:
       - targets: ["api:8000"]
+    metrics_path: /metrics
+  # Worker exposes metrics where agent_steps / jobs_completed / job_duration are updated.
+  - job_name: multi-agent-worker
+    static_configs:
+      - targets: ["worker:9100"]
     metrics_path: /metrics

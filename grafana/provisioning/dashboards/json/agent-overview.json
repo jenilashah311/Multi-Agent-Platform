@@ -13,12 +13,12 @@
       "options": { "legend": { "displayMode": "list" }, "tooltip": { "mode": "single" } },
       "targets": [
         {
-          "expr": "rate(agent_jobs_completed_total[5m])",
-          "legendFormat": "jobs/s",
+          "expr": "sum(increase(agent_jobs_completed_total[5m]))",
+          "legendFormat": "jobs / 5m",
           "refId": "A"
         }
       ],
-      "title": "Agent jobs completed (rate)",
+      "title": "Jobs completed (increase over 5m)",
       "type": "timeseries"
     },
     {
@@ -41,9 +41,9 @@
       "gridPos": { "h": 6, "w": 24, "x": 0, "y": 8 },
       "id": 3,
       "targets": [
-        { "expr": "sum by (agent) (rate(agent_steps_total[5m]))", "legendFormat": "{{agent}}", "refId": "A" }
+        { "expr": "sum by (agent) (increase(agent_steps_total[5m]))", "legendFormat": "{{agent}}", "refId": "A" }
       ],
-      "title": "Agent steps by role",
+      "title": "Agent steps by role (increase over 5m)",
       "type": "timeseries"
     }
   ],
@@ -54,5 +54,5 @@
   "timezone": "browser",
   "title": "Multi-Agent Platform",
   "uid": "multi-agent",
-  "version": 1
+  "version": 3
 }

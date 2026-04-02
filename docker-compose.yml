@@ -48,7 +48,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: celery -A app.celery_app worker --loglevel=info
+    # solo pool: metrics and tasks share one process so Prometheus sees job counters (prefork hides child metrics).
+    command: celery -A app.celery_app worker --loglevel=info --pool=solo
     env_file:
       - .env
     environment:
@@ -86,6 +87,7 @@ services:
       - "19090:9090"
     depends_on:
       - api
+      - worker
 
   grafana:
     image: grafana/grafana:11.2.0

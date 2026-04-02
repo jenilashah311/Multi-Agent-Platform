@@ -36,6 +36,8 @@ docker compose up --build
 | Grafana   | http://localhost:3000 (admin/admin) |
 | Chroma    | http://localhost:8001    |
 
+**Grafana panels:** Metrics come from the **Celery worker** (`worker:9100`). Run a Streamlit job, set time range to **Last 15 minutes**, refresh. The dashboard uses **`increase(...[5m])`** (not `rate`) so low-traffic runs still show bars. **`rate()`** often looks empty when you only have a few jobs in a short window.
+
 **Smoke test (no API key):** leave `DEMO_MODE=true` (default in Compose). Submit a goal in Streamlit; worker completes with demo steps.
 
 **Production-style run:** set `GOOGLE_API_KEY` (Gemini, default) or `OPENAI_API_KEY` with `LLM_PROVIDER=openai`, set `DEMO_MODE=false`, rebuild.
