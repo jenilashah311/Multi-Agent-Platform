@@ -4,16 +4,20 @@ End-to-end stack: **orchestrated agents** (research → analysis → writing), *
 
 ## Architecture
 
+**Request path:** Streamlit calls FastAPI; FastAPI **enqueues** work to **Redis**; the **Celery worker** **consumes** tasks from Redis and runs tools + LLM (Chroma for RAG).
+
+**Metrics path:** **Prometheus** *pulls* (HTTP `GET /metrics`) from **FastAPI** and from the **Celery worker** (job counters live on the worker). **Grafana** reads Prometheus (datasource), not your app directly.
+
 ```mermaid
 flowchart LR
   UI[Streamlit] --> API[FastAPI]
-  API --> Redis[(Redis)]
-  API --> W[Celery Worker]
+  API -->|Celery enqueue| Redis[(Redis)]
+  Redis -->|task queue| W[Celery Worker]
   W --> Tools[Search / SQL / LLM]
   W --> Chroma[(ChromaDB)]
-  W --> Redis
-  Prom[Prometheus] --> API
-  Graf[Grafana] --> Prom
+  Prom[Prometheus] -->|HTTP scrape /metrics| API
+  Prom -->|HTTP scrape /metrics| W
+  Graf[Grafana] -->|query| Prom
 ```
 
 ## Quick start (Docker)
