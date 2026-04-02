@@ -1,0 +1,34 @@
+# Secrets — never commit (copy from .env.example)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Runtime / data
+chroma_data/
+*.log
+
+# Generated example asset (optional: run examples/make_sample_pdf.py)
+examples/*.pdf
